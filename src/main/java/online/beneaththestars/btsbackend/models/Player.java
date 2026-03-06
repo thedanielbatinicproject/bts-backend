@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -13,8 +15,10 @@ import lombok.NoArgsConstructor;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playerId;
+    private long playerSteamId;
 
-    private String playerName;
+    private String playerSteamUsername;
+    private Date playerCreatedAt;
+
 
 }
