@@ -1,11 +1,9 @@
 package online.beneaththestars.btsbackend.services;
 
 import jakarta.transaction.Transactional;
-import online.beneaththestars.btsbackend.models.Player;
+import online.beneaththestars.btsbackend.models.entities.Player;
 import online.beneaththestars.btsbackend.repo.PlayerRepo;
 import org.springframework.stereotype.Service;
-
-import java.beans.Transient;
 
 @Service
 public class PlayerService {

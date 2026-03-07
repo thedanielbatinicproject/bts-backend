@@ -1,6 +1,6 @@
 package online.beneaththestars.btsbackend.controllers;
 
-import online.beneaththestars.btsbackend.models.Player;
+import online.beneaththestars.btsbackend.models.entities.Player;
 import online.beneaththestars.btsbackend.services.PlayerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
