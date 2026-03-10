@@ -4,7 +4,9 @@ import online.beneaththestars.btsbackend.models.entities.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface PlayerRepo extends JpaRepository<Player, Long> {
-    Player findByPlayerId(long playerId);
+public interface PlayerRepository extends JpaRepository<Player, Long> {
+    Optional<Player> findBySteamId(String steamId);
 }
