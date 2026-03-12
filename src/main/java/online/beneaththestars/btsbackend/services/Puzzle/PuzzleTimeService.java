@@ -5,10 +5,14 @@ import lombok.RequiredArgsConstructor;
 import online.beneaththestars.btsbackend.models.dto.PlayerDTOs.PlayerRequest;
 import online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs.PlayerPuzzleTimeEntry;
 import online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs.PuzzleLeaderboardEntry;
+import online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs.SubmitPuzzleTimeRequest;
 import online.beneaththestars.btsbackend.models.entities.Player;
+import online.beneaththestars.btsbackend.models.entities.Puzzle;
 import online.beneaththestars.btsbackend.models.entities.PuzzleTime;
+import online.beneaththestars.btsbackend.repo.PlayerRepository;
 import online.beneaththestars.btsbackend.repo.PuzzleRepository;
 import online.beneaththestars.btsbackend.repo.PuzzleTimeRepository;
+import online.beneaththestars.btsbackend.services.GameSignatureService;
 import online.beneaththestars.btsbackend.services.Player.PlayerService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +30,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class PuzzleTimeService {
+
+    public record UpsertResult(PuzzleTime saved, boolean created) {}
+
     private final PuzzleRepository puzzleRepository;
     private final PuzzleTimeRepository puzzleTimeRepository;
     private final PlayerService playerService;
+    private final PlayerRepository playerRepository;
+    private final GameSignatureService gameSignatureService;
 
     public void deletePuzzleTimeEntry(String puzzleCode, String steamId) {
         if (!puzzleRepository.existsById(puzzleCode)) {
@@ -170,5 +180,73 @@ public class PuzzleTimeService {
                 pt.getUpdatedAt()
         ));
     }
+
+
+    public UpsertResult submitTime(String puzzleCode, SubmitPuzzleTimeRequest submitReq) {
+        Puzzle puzzle = puzzleRepository.findById(puzzleCode).orElseThrow(() ->
+                new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Puzzle with code " + puzzleCode + " was not found")
+        );
+
+        // validate clientTimestamp window (example: +5 minutes future, max 30 days old)
+        long now = Instant.now().toEpochMilli();
+        long ts = submitReq.getClientTimestamp().toEpochMilli();
+        if (ts > now + 5 * 60_000L) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client timestamp too far in the future, entry denied!");
+        }
+        if (ts < now - 30L * 24 * 60 * 60_000L) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client timestamp too old, time entry denied!");
+        }
+
+        // verify signature
+        gameSignatureService.verifyOrThrow(
+                submitReq.getSteamId(),
+                puzzleCode,
+                submitReq.getTimeMs(),
+                submitReq.getClientTimestamp().toEpochMilli(),
+                submitReq.getSignature()
+        );
+
+        // upsert player
+        Player player = playerRepository.findBySteamId(req.getSteamId()).orElseGet(() -> {
+            Player p = new Player();
+            p.setSteamId(req.getSteamId());
+            p.setUsername(req.getUsername());
+            return playerRepository.save(p);
+        });
+
+        if (req.getUsername() != null && !req.getUsername().isBlank() && !req.getUsername().equals(player.getUsername())) {
+            player.setUsername(req.getUsername());
+            playerRepository.save(player);
+        }
+
+        // upsert time entry
+        PuzzleTime existing = puzzleTimeRepository
+                .findByPuzzle_PuzzleCodeAndPlayer_SteamId(puzzleCode, req.getSteamId())
+                .orElse(null);
+
+        boolean created;
+        PuzzleTime toSave;
+
+        if (existing == null) {
+            created = true;
+            toSave = new PuzzleTime();
+            toSave.setPuzzle(puzzle);
+            toSave.setPlayer(player);
+        } else {
+            created = false;
+            toSave = existing;
+        }
+
+        toSave.setTimeMs(req.getTimeMs().intValue());
+        toSave.setClientTimestamp(Instant.ofEpochMilli(req.getClientTimestamp()));
+
+        PuzzleTime saved = puzzleTimeRepository.save(toSave);
+        return new UpsertResult(saved, created);
+    }
+}
+
+
 
 }

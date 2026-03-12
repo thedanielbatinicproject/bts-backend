@@ -1,14 +1,15 @@
 package online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs;
 
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.Instant;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class SubmitPuzzleTimeRequest {
     @NotBlank(message = "SteamId must not be blank in creating new time record for puzzle!")
     private String steamId;
