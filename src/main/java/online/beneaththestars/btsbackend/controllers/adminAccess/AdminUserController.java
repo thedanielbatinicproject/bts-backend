@@ -61,7 +61,7 @@ public class AdminUserController {
         );
     }
 
-    @DeleteMapping("/admin-users/{adminUserId")
+    @DeleteMapping("/admin-users/{adminUserId}")
     public ResponseEntity<Void> deleteAdminUser(
             @PathVariable long adminUserId,
             HttpServletRequest httpRequest
