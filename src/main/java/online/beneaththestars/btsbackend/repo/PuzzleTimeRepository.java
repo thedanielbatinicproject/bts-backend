@@ -14,6 +14,10 @@ public interface PuzzleTimeRepository extends JpaRepository<PuzzleTime, Long> {
     Optional<PuzzleTime> findByPuzzle_PuzzleCodeAndPlayer_SteamId(String puzzleCode, String steamId);
     Page<PuzzleTime> findAllByPuzzle_PuzzleCode(String puzzleCode, Pageable pageable);
     Page<PuzzleTime> findAllByPlayer_SteamId(String steamId, Pageable pageable);
-    void deleteByPuzzle_PuzzleCodeAndPlayer_SteamId(String puzzleCode, String playerId);
+    boolean existsByPuzzle_PuzzleCode(String puzzleCode);
+    boolean existsByPlayer_SteamId(String steamId);
+    boolean existsByPuzzle_PuzzleCodeAndPlayer_SteamId(String puzzleCode, String steamId);
+    void deleteByPuzzle_PuzzleCodeAndPlayer_SteamId(String puzzleCode, String steamId);
     void deleteAllByPlayer_SteamId(String steamId);
+    Page<PuzzleTime> findAllByPuzzle_PuzzleCodeOrderByTimeMsAscUpdatedAtAsc(String puzzleCode, Pageable pageable);
 }

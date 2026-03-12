@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface PuzzleRepository extends JpaRepository<Puzzle, String> {
     Optional<Puzzle> findByPuzzleCode(String puzzleCode);
     Page<Puzzle> findAllByPuzzleChapterNumber(int chapterNumber, Pageable pageable);
-
+    boolean existsByPuzzleCode(String puzzleCode);
 }

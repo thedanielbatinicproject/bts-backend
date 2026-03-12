@@ -16,6 +16,7 @@ public class AdminUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adminId;
+
     @Column(
             name = "admin_username",
             unique = true,

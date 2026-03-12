@@ -1,4 +1,4 @@
-package online.beneaththestars.btsbackend.models.dto;
+package online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,11 @@ import java.time.Instant;
 public class SubmitPuzzleTimeRequest {
     @NotBlank(message = "SteamId must not be blank in creating new time record for puzzle!")
     private String steamId;
+    @NotBlank(message = "You must send Steam username when submitting puzzle time.")
     private String username;
     @Min(1)
     @Max(86_400_000)
-    private Long timeMs;
+    private long timeMs;
     @NotNull
     private Instant clientTimestamp;
     @NotBlank(message = "New time record request MUST include valid signature!")

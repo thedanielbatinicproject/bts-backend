@@ -1,6 +1,5 @@
-package online.beneaththestars.btsbackend.models.dto;
+package online.beneaththestars.btsbackend.models.dto.NewsDTOs;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

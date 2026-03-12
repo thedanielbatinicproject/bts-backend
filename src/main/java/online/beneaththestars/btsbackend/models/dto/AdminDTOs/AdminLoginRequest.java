@@ -1,4 +1,4 @@
-package online.beneaththestars.btsbackend.models.dto;
+package online.beneaththestars.btsbackend.models.dto.AdminDTOs;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
