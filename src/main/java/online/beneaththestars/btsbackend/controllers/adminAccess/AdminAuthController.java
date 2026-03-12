@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.beneaththestars.btsbackend.models.dto.AdminDTOs.AdminLoginRequest;
 import online.beneaththestars.btsbackend.models.dto.AdminDTOs.AdminSessionResponse;
-import online.beneaththestars.btsbackend.services.AdminAuthService;
+import online.beneaththestars.btsbackend.services.Admin.AdminAuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

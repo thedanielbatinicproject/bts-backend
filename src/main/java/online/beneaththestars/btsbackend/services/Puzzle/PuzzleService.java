@@ -1,4 +1,4 @@
-package online.beneaththestars.btsbackend.services;
+package online.beneaththestars.btsbackend.services.Puzzle;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

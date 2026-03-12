@@ -1,4 +1,4 @@
-package online.beneaththestars.btsbackend.services;
+package online.beneaththestars.btsbackend.services.Admin;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

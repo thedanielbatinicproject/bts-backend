@@ -1,4 +1,4 @@
-package online.beneaththestars.btsbackend.services;
+package online.beneaththestars.btsbackend.services.Puzzle;
 
 import lombok.RequiredArgsConstructor;
 import online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs.PuzzleLeaderboardEntry;

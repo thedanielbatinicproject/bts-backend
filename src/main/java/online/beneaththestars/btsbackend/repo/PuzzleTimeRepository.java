@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface PuzzleTimeRepository extends JpaRepository<PuzzleTime, Long> {
+
     Optional<PuzzleTime> findByPuzzle_PuzzleCodeAndPlayer_SteamId(String puzzleCode, String steamId);
     Page<PuzzleTime> findAllByPuzzle_PuzzleCode(String puzzleCode, Pageable pageable);
     Page<PuzzleTime> findAllByPlayer_SteamId(String steamId, Pageable pageable);

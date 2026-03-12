@@ -1,11 +1,10 @@
-package online.beneaththestars.btsbackend.services;
+package online.beneaththestars.btsbackend.services.Admin;
 
 import lombok.RequiredArgsConstructor;
 import online.beneaththestars.btsbackend.models.entities.AdminUser;
 import online.beneaththestars.btsbackend.models.enums.Role;
 import online.beneaththestars.btsbackend.models.services.IAdminUserService;
 import online.beneaththestars.btsbackend.repo.AdminUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
