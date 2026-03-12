@@ -21,4 +21,6 @@ public interface PuzzleTimeRepository extends JpaRepository<PuzzleTime, Long> {
     void deleteByPuzzle_PuzzleCodeAndPlayer_SteamId(String puzzleCode, String steamId);
     void deleteAllByPlayer_SteamId(String steamId);
     Page<PuzzleTime> findAllByPuzzle_PuzzleCodeOrderByTimeMsAscUpdatedAtAsc(String puzzleCode, Pageable pageable);
+
+    long countByPlayer_SteamId(String playerSteamId);
 }

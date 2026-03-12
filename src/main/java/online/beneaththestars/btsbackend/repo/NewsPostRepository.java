@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NewsPostRepository extends JpaRepository<NewsPost, Long> {
     Page<NewsPost> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    NewsPost findNewsPostById(Long id);
 }

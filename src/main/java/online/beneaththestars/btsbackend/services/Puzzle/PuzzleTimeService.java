@@ -189,7 +189,7 @@ public class PuzzleTimeService {
                         "Puzzle with code " + puzzleCode + " was not found")
         );
 
-        // validate clientTimestamp window (example: +5 minutes future, max 30 days old)
+        // validate clientTimestamp window
         long now = Instant.now().toEpochMilli();
         long ts = submitReq.getClientTimestamp().toEpochMilli();
         if (ts > now + 5 * 60_000L) {
@@ -208,22 +208,24 @@ public class PuzzleTimeService {
                 submitReq.getSignature()
         );
 
-        // upsert player
-        Player player = playerRepository.findBySteamId(req.getSteamId()).orElseGet(() -> {
+        // player
+        Player player = playerRepository.findBySteamId(submitReq.getSteamId()).orElseGet(() -> {
             Player p = new Player();
-            p.setSteamId(req.getSteamId());
-            p.setUsername(req.getUsername());
+            p.setSteamId(submitReq.getSteamId());
+            p.setUsername(submitReq.getUsername());
             return playerRepository.save(p);
         });
 
-        if (req.getUsername() != null && !req.getUsername().isBlank() && !req.getUsername().equals(player.getUsername())) {
-            player.setUsername(req.getUsername());
+        if (submitReq.getUsername() != null
+                && !submitReq.getUsername().isBlank()
+                && !submitReq.getUsername().equals(player.getUsername())) {
+            player.setUsername(submitReq.getUsername());
             playerRepository.save(player);
         }
 
-        // upsert time entry
+        //time entry
         PuzzleTime existing = puzzleTimeRepository
-                .findByPuzzle_PuzzleCodeAndPlayer_SteamId(puzzleCode, req.getSteamId())
+                .findByPuzzle_PuzzleCodeAndPlayer_SteamId(puzzleCode, submitReq.getSteamId())
                 .orElse(null);
 
         boolean created;
@@ -239,14 +241,10 @@ public class PuzzleTimeService {
             toSave = existing;
         }
 
-        toSave.setTimeMs(req.getTimeMs().intValue());
-        toSave.setClientTimestamp(Instant.ofEpochMilli(req.getClientTimestamp()));
+        toSave.setTimeMs((int) submitReq.getTimeMs());
+        toSave.setClientTimestamp(submitReq.getClientTimestamp());
 
         PuzzleTime saved = puzzleTimeRepository.save(toSave);
         return new UpsertResult(saved, created);
     }
-}
-
-
-
 }

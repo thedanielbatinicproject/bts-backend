@@ -1,14 +1,17 @@
 package online.beneaththestars.btsbackend.controllers.publicAccess;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.beneaththestars.btsbackend.models.dto.PlayerDTOs.PlayerRequest;
 import online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs.PlayerPuzzleTimeEntry;
+import online.beneaththestars.btsbackend.models.dto.PuzzleTimeDTOs.SubmitPuzzleTimeRequest;
 import online.beneaththestars.btsbackend.services.Player.PlayerService;
 import online.beneaththestars.btsbackend.services.Puzzle.PuzzleService;
 import online.beneaththestars.btsbackend.services.Puzzle.PuzzleTimeService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +29,7 @@ public class PlayerController {
     public ResponseEntity<PlayerRequest> fetchPlayer(
             @PathVariable String steamId
     ) {
-        return ResponseEntity.ok(PlayerService.playerToRequest(playerService.getPlayer(steamId)));
+        return ResponseEntity.ok(PlayerService.playerToPlayerRequest(playerService.getPlayer(steamId)));
     }
 
     @GetMapping("/{steamId}/times")
@@ -41,5 +44,14 @@ public class PlayerController {
     }
 
     @PutMapping("/{puzzleCode}/time")
-    public ResponseEntity<>
+    public ResponseEntity<Void> submitPuzzleTime(
+            @PathVariable String puzzleCode,
+            @Valid @RequestBody SubmitPuzzleTimeRequest submitReq
+    ) {
+        PuzzleTimeService.UpsertResult result = puzzleTimeService.submitTime(puzzleCode, submitReq);
+
+        return result.created()
+                ? ResponseEntity.status(HttpStatus.CREATED).build()
+                : ResponseEntity.ok().build();
+    }
 }

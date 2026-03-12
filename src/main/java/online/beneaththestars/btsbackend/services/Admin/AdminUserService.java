@@ -88,4 +88,5 @@ public class AdminUserService implements IAdminUserService {
         if (adminUser == null) throw new RuntimeException("Not logged in!");
         if (adminUser.getRole() != Role.SUPERADMIN) throw new RuntimeException("Forbidden!");
     }
+
 }

@@ -26,7 +26,7 @@ public class GameSignatureService {
         String expected = hmacSha256Hex(canonical);
 
         if (!constantTimeEqualsIgnoreCase(expected, providedSignature)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid signature");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid signature!");
         }
     }
 
