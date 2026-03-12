@@ -35,3 +35,6 @@ src/main/resources/application.properties
 /src/main/resources
 *.properties
 *.properties
+/src/main/resources
+src/main/resources/application.properties
+src/main/resources/application.properties

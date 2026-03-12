@@ -29,6 +29,7 @@ public class AdminNewsController {
     public ResponseEntity<NewsPost> publishNews(
             @RequestBody @Valid CreateNewsRequest createNewsRequest,
             HttpServletRequest httpRequest) {
+        adminAuthService.requireLoggedInAdmin(httpRequest);
         adminAuthService.getLoggedInAdminId(httpRequest);
         return
                 ResponseEntity.ok(newsService.createNewsPost(
@@ -75,5 +76,4 @@ public class AdminNewsController {
         newsService.deleteNewsPost(newsId);
         return ResponseEntity.noContent().build();
     }
-
 }

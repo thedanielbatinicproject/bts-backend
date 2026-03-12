@@ -18,7 +18,9 @@ public class AdminAuthController {
     private final AdminAuthService adminAuthService;
 
     @PostMapping
-    public ResponseEntity<Void> loginAdmin(@Valid @RequestBody AdminLoginRequest adminLoginRequest, HttpServletRequest httpRequest){
+    public ResponseEntity<Void> loginAdmin(
+            @Valid @RequestBody AdminLoginRequest adminLoginRequest,
+            HttpServletRequest httpRequest){
         adminAuthService.login(adminLoginRequest, httpRequest);
         return ResponseEntity.noContent().build();
     }

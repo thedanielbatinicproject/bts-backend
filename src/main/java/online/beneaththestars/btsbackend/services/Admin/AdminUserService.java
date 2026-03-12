@@ -84,6 +84,22 @@ public class AdminUserService implements IAdminUserService {
         }
     }
 
+    public AdminUser createInitialSuperAdmin(String username, String rawPassword, boolean enabled) {
+        if (username == null || username.isBlank()) throw new RuntimeException("Bootstrap username is required!");
+        if (rawPassword == null || rawPassword.isBlank()) throw new RuntimeException("Bootstrap password is required!");
+
+        if (adminUserRepository.count() > 0) {
+            return null;
+        }
+
+        AdminUser admin = new AdminUser();
+        admin.setAdminUsername(username);
+        admin.setAdminPasswordHash(passwordEncoder.encode(rawPassword));
+        admin.setRole(Role.SUPERADMIN);
+        admin.setEnabled(enabled);
+        return adminUserRepository.save(admin);
+    }
+
     public void requireSuperAdminUser(AdminUser adminUser) {
         if (adminUser == null) throw new RuntimeException("Not logged in!");
         if (adminUser.getRole() != Role.SUPERADMIN) throw new RuntimeException("Forbidden!");

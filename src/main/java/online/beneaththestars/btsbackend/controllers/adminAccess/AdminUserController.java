@@ -24,7 +24,9 @@ public class AdminUserController {
     private final AdminAuthService adminAuthService;
 
     @PostMapping("/admin-users")
-    public ResponseEntity<AdminUser> createNewAdmin(@Valid @RequestBody AdminUserRequest adminRequest, HttpServletRequest httpRequest) {
+    public ResponseEntity<AdminUser> createNewAdmin(
+            @Valid @RequestBody AdminUserRequest adminRequest,
+            HttpServletRequest httpRequest) {
         adminAuthService.requireSuperAdmin(httpRequest);
         AdminUser adminUser = adminUserService.createAdminUser(adminRequest.getUsername(),
                                                                 adminRequest.getPassword(),
@@ -38,6 +40,7 @@ public class AdminUserController {
             @RequestParam(defaultValue = "20") int size,
             HttpServletRequest httpRequest
     ) {
+        adminAuthService.requireLoggedInAdmin(httpRequest);
         Pageable pageable = PageRequest.of(page, size);
         Page<AdminUser> result = adminUserService.listAdminUsers(pageable);
         return ResponseEntity.ok(result);
