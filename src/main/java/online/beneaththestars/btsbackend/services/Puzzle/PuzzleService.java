@@ -7,6 +7,7 @@ import online.beneaththestars.btsbackend.models.dto.PuzzleDTOs.UpdatePuzzleReque
 import online.beneaththestars.btsbackend.models.entities.Puzzle;
 import online.beneaththestars.btsbackend.models.services.IPuzzleService;
 import online.beneaththestars.btsbackend.repo.PuzzleRepository;
+import online.beneaththestars.btsbackend.repo.PuzzleTimeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class PuzzleService implements IPuzzleService {
     private final PuzzleRepository puzzleRepository;
-
+    private final PuzzleTimeRepository puzzleTimeRepository;
     public Puzzle createNewPuzzle(CreatePuzzleRequest request) {
         if (puzzleRepository.existsById(request.getPuzzleCode())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -42,6 +43,7 @@ public class PuzzleService implements IPuzzleService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Puzzle with code " + puzzleCode + " was not found");
         }
+        puzzleTimeRepository.deleteAllByPuzzle_PuzzleCode(puzzleCode);
         puzzleRepository.deleteById(puzzleCode);
     }
 

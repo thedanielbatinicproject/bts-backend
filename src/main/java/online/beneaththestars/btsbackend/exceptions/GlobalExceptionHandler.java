@@ -3,6 +3,7 @@ package online.beneaththestars.btsbackend.exceptions;
 import online.beneaththestars.btsbackend.models.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,6 +39,25 @@ public class GlobalExceptionHandler {
                                 "exception", ex.getClass().getSimpleName(),
                                 "path", ex.getResourcePath()
                         )
+                ));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, Object> details = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        org.springframework.validation.FieldError::getField,
+                        error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "Invalid value",
+                        (first, second) -> first
+                ));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiErrorResponse(
+                        400,
+                        "Validation failed for request body!",
+                        details
                 ));
     }
 
