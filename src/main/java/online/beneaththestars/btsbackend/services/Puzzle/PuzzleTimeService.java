@@ -192,10 +192,10 @@ public class PuzzleTimeService {
         // validate clientTimestamp window
         long now = Instant.now().toEpochMilli();
         long ts = submitReq.getClientTimestamp().toEpochMilli();
-        if (ts > now + 5 * 60_000L) {
+        if (ts > now + 5 * 60000) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client timestamp too far in the future, entry denied!");
         }
-        if (ts < now - 30L * 24 * 60 * 60_000L) {
+        if (ts < now - (long)30 * 24 * 60 * 60000) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client timestamp too old, time entry denied!");
         }
 
