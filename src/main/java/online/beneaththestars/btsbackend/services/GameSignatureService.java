@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.OptionalInt;
 
 @Service
 public class GameSignatureService {
@@ -28,6 +29,7 @@ public class GameSignatureService {
         if (!constantTimeEqualsIgnoreCase(expected, providedSignature)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid signature!");
         }
+
     }
 
     private String canonicalString(String steamId, String puzzleCode, long timeMs, long clientTimestamp) {
@@ -57,9 +59,9 @@ public class GameSignatureService {
 
         int result = 0;
         for (int i = 0; i < a.length(); i++) {
-            char ca = Character.toLowerCase(a.charAt(i));
-            char cb = Character.toLowerCase(b.charAt(i));
-            result |= (ca ^ cb);
+            char ai = Character.toLowerCase(a.charAt(i));
+            char bi = Character.toLowerCase(b.charAt(i));
+            result = result | (ai ^ bi);
         }
         return result == 0;
     }

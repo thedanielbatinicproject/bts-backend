@@ -189,7 +189,6 @@ public class PuzzleTimeService {
                         "Puzzle with code " + puzzleCode + " was not found")
         );
 
-        // validate clientTimestamp window
         long now = Instant.now().toEpochMilli();
         long ts = submitReq.getClientTimestamp().toEpochMilli();
         if (ts > now + 5 * 60000) {
@@ -199,7 +198,6 @@ public class PuzzleTimeService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Client timestamp too old, time entry denied!");
         }
 
-        // verify signature
         gameSignatureService.verifyOrThrow(
                 submitReq.getSteamId(),
                 puzzleCode,
@@ -208,7 +206,6 @@ public class PuzzleTimeService {
                 submitReq.getSignature()
         );
 
-        // player
         Player player = playerRepository.findBySteamId(submitReq.getSteamId()).orElseGet(() -> {
             Player p = new Player();
             p.setSteamId(submitReq.getSteamId());
@@ -223,7 +220,6 @@ public class PuzzleTimeService {
             playerRepository.save(player);
         }
 
-        //time entry
         PuzzleTime existing = puzzleTimeRepository
                 .findByPuzzle_PuzzleCodeAndPlayer_SteamId(puzzleCode, submitReq.getSteamId())
                 .orElse(null);

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import online.beneaththestars.btsbackend.models.dto.PuzzleDTOs.CreatePuzzleRequest;
 import online.beneaththestars.btsbackend.models.dto.PuzzleDTOs.UpdatePuzzleRequest;
 import online.beneaththestars.btsbackend.models.entities.Puzzle;
-import online.beneaththestars.btsbackend.models.services.IPuzzleService;
 import online.beneaththestars.btsbackend.repo.PuzzleRepository;
 import online.beneaththestars.btsbackend.repo.PuzzleTimeRepository;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PuzzleService implements IPuzzleService {
+public class PuzzleService {
     private final PuzzleRepository puzzleRepository;
     private final PuzzleTimeRepository puzzleTimeRepository;
     public Puzzle createNewPuzzle(CreatePuzzleRequest request) {
@@ -70,7 +69,6 @@ public class PuzzleService implements IPuzzleService {
         if (!anyChange) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No fields provided to update puzzle!");
         }
-
         return puzzleRepository.save(puzzle);
     }
 

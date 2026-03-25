@@ -7,7 +7,6 @@ import online.beneaththestars.btsbackend.models.dto.AdminDTOs.AdminLoginRequest;
 import online.beneaththestars.btsbackend.models.dto.AdminDTOs.AdminSessionResponse;
 import online.beneaththestars.btsbackend.models.entities.AdminUser;
 import online.beneaththestars.btsbackend.models.enums.Role;
-import online.beneaththestars.btsbackend.models.services.IAdminAuthService;
 import online.beneaththestars.btsbackend.repo.AdminUserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,8 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
-public class AdminAuthService implements IAdminAuthService {
-    public static final String SESSION_ADMIN_ID = "BTS_ADMIN_SESSION_ID";
+public class AdminAuthService {
+    public static final String SESSION_ADMIN_ID = "BTS_SESSION_ADMIN_ID";
     private final AdminUserRepository adminUserRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -81,10 +80,6 @@ public class AdminAuthService implements IAdminAuthService {
         return admin;
     }
 
-    public boolean isLoggedIn(HttpServletRequest httpRequest) {
-        return getLoggedInAdminId(httpRequest) != null;
-    }
-
     public void requireSuperAdmin(HttpServletRequest httpRequest) {
         AdminUser admin = requireLoggedInAdmin(httpRequest);
         if (admin.getRole() != Role.SUPERADMIN) {
@@ -92,10 +87,6 @@ public class AdminAuthService implements IAdminAuthService {
         }
     }
 
-    public boolean isSuperAdmin(HttpServletRequest httpRequest) {
-        AdminUser admin = getLoggedInAdmin(httpRequest);
-        return admin != null && admin.getRole() == Role.SUPERADMIN;
-    }
 
     public AdminSessionResponse getSessionInfo(HttpServletRequest httpRequest) {
         AdminUser admin = requireLoggedInAdmin(httpRequest);

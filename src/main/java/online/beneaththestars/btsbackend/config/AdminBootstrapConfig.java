@@ -22,7 +22,7 @@ public class AdminBootstrapConfig {
     ) {
         return args -> {
             if (username.isBlank() || password.isBlank()) {
-                System.out.println("SUPERADMIN bootstrap skipped: username/password not configured.");
+                System.out.println("SUPERADMIN bootstrap skipped: username or password not configured.");
                 return;
             }
 

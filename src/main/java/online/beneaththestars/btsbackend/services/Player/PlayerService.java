@@ -70,7 +70,6 @@ public class PlayerService {
 
         // delete times first
         puzzleTimeRepository.deleteAllByPlayer_SteamId(steamId);
-
         playerRepository.delete(player);
     }
 
